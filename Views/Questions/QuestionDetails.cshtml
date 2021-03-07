@@ -1,0 +1,86 @@
+﻿@model Question
+@{
+    ViewData["Title"] = "QuestionDetails";
+    var numOfAffirmativesRequired = Model.NumberofAffirmativesRequired - Model.Responses.Where(r => r.Response).Count();
+    int numOfAffirmatives = Model.Responses.Where(r => r.Response == true).Count();
+    int numOfNegatives = Model.Responses.Where(r => r.Response == false).Count();
+}
+<div class="row">
+    <div class="col-9" style="margin-top:20px;">
+        <div class="container">
+            <h3>@Model.Title</h3>
+            <br />
+            <p>@Model.Description</p>
+            <p class="affirmatives" numOfAffirmatives="@numOfAffirmatives">
+                <a asp-action="Affirmatives" asp-controller="Responses" asp-route-questionId="@Model.Id">
+                    Evet: @numOfAffirmatives
+                </a>
+            </p>
+            <p class="negatives" numOfNegatives="@numOfNegatives">
+                <a asp-action="Negatives" asp-controller="Responses" asp-route-questionId="@Model.Id">
+                    Hayır: @numOfNegatives
+                </a>
+            </p>
+            <p>Kapanma tarihi: @Model.Deadline.ToShortDateString()</p>
+            <p>Kalan gerekli onay sayısı: @(numOfAffirmativesRequired >= 0? numOfAffirmativesRequired : 0)</p>
+            <hr />
+            <a asp-action="DownloadDocument" asp-controller="Questions" asp-route-questionId="@Model.Id">Word dosyası oluştur</a>
+            <hr />
+            <a href="#" class="removeQuestion" questionId="@Model.Id">
+                Soruyu kaldır
+            </a>
+
+        </div>
+    </div>
+    <div class="col-3">
+        <div id="piechart"></div>
+
+    </div>
+</div>
+
+
+
+
+
+@section Scripts{
+    <script>
+
+        var numOfAffirmatives = Number($('.affirmatives').attr('numOfAffirmatives'));
+        var numOfNegatives = Number($('.negatives').attr('numOfNegatives'));
+
+        google.charts.load('current', { 'packages': ['corechart'] });
+        google.charts.setOnLoadCallback(drawChart);
+
+        // Draws the chart and set the chart values
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Response', 'Number'],
+                ['Evet', numOfAffirmatives],
+                ['Hayır', numOfNegatives]
+
+            ]);
+
+
+            var options = { 'title': 'Cevaplar', 'width': 450, 'height': 300 };
+            var chart = new google.visualization.PieChart(document.getElementById('piechart'));
+            chart.draw(data, options);
+        }
+
+        $(document).ready(function () {
+            $('.removeQuestion').click(function (e) {
+                var questionId = $(this).attr('questionId');
+                e.preventDefault();
+                if (confirm("Soruyu silmek istediğinize emin misiniz?")) {
+                    $.post("/Questions/Cancel", { questionId: questionId })
+                        .done(function () {
+                            location = "/Questions/List";
+                        })
+                }
+            })
+
+
+        })
+
+    </script>
+
+}

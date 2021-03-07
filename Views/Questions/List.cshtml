@@ -1,0 +1,50 @@
+﻿@model IEnumerable<Question>
+
+@{
+    ViewData["Title"] = "List";
+}
+
+<h3>Sorular</h3>
+
+@if (Model.Count() == 0)
+{
+    <div class="alert alert-warning">Aktif soru bulunmamaktadır.</div>
+}
+
+@foreach (var question in Model)
+{
+
+
+    <div class="card">
+        @if (User.IsInRole("Admin"))
+        {
+            <h5 class="card-header">
+                <a asp-action="QuestionDetails" asp-controller="Questions" asp-route-questionId="@question.Id">Soru</a>
+            </h5>
+        }
+        else
+        {
+            <h5 class="card-header">Soru</h5>
+        }
+
+        <div class="card-body">
+            <h5 class="card-title">@question.Title</h5>
+            <p class="card-text">@question.Description</p>
+            <p class="card-text">
+
+                Evet: @question.Responses.Where(s => s.Response).Count()
+
+
+                Hayır: @question.Responses.Where(s => s.Response == false).Count()
+
+
+            </p>
+            @if (!User.Identity.IsAuthenticated || User.IsInRole("Member"))
+            {
+                <a asp-action="Create" asp-controller="Responses" asp-route-questionId="@question.Id" asp-route-returnUrl="/Responses/Create/" class="btn btn-primary">Yanıtla!</a>
+            }
+
+        </div>
+    </div>
+    <br />
+}

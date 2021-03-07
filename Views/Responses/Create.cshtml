@@ -1,0 +1,93 @@
+﻿@model ResponseModel
+
+@{
+    ViewData["Title"] = "Create";
+    var questionId = Model.Question.Id;
+}
+
+<h4>Yanıtla</h4>
+<hr />
+<div class="alert-danger invisible info">
+
+</div>
+<div class="alert-warning invisible info">
+
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <input type="hidden" asp-for="Username" />
+            <input type="hidden" asp-for="ResponseDate" />
+            <input class="questionId" questionId=@questionId type="hidden" asp-for="QuestionId" />
+
+            <div class="container" style="padding-left:0px;">
+                <h4>@Model.Question.Title</h4>
+                <p>@Model.Question.Description</p>
+
+            </div>
+
+            <div class="myResponse"></div>
+            <div class="form-group input-res" style="width:100px;">
+                <label asp-for="Response" class="control-label"></label>
+                @Html.DropDownListFor(model => model.Response, new List<SelectListItem>
+                     {
+                       new SelectListItem { Text = "Evet" , Value = "True", Selected=true},
+                       new SelectListItem { Text = "Hayır", Value = "False" }
+                     }, new { @class = "form-control" })
+
+
+            </div>
+
+
+            <br />
+
+
+            <div class="form-group input-res">
+                <label asp-for="Note" class="control-label"></label>
+                <textarea asp-for="Note" class="form-control" rows="4" cols="50"></textarea>
+
+            </div>
+
+            <div class="form-group saveButton input-res">
+                <input type="submit" value="Kaydet" class="btn btn-primary saveButton" />
+            </div>
+        </form>
+
+    </div>
+</div>
+
+@section Scripts{
+    <script>
+        $(document).ready(function () {
+            var questionId = $('.questionId').attr('questionId');
+            $.post("/Questions/DeadlineControl", { questionId: questionId })
+                .done(function (result) {
+                    if (!result) {
+                        $('.alert-danger').text("Bu sorunun süresi dolmuştur.");
+                        $('.alert-danger').toggleClass('invisible');
+                        $('.input-res').addClass('invisible');
+                    }
+                })
+            $.post("/Responses/ResponseControl", { questionId: questionId })
+                .done(function (result) {
+                    if (result) {
+                        $('.alert-warning').text("Bu soruyu yanıtladınız.");
+                        $('.alert-warning').toggleClass('invisible');
+                        if (!$('.input-res').hasClass('invisible')) {
+                            $('.input-res').addClass('invisible');
+                        }
+
+                        $.post("/Responses/MyResponse", { questionId: questionId })
+                            .done(function (result) {
+                                $('.myResponse').append("<p>Yanıtınız: " + result + "</p>");
+
+                            })
+                    }
+                })
+        })
+
+    </script>
+
+
+}

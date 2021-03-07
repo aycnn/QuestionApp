@@ -1,0 +1,52 @@
+﻿@model User
+@{
+    ViewData["Title"] = "Register";
+}
+
+<h1>Kayıt</h1>
+<div class="alert alert-danger invisible">Bu kullanıcı adı sistemde mevcut</div>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Register">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="Username" class="control-label"></label>
+                <input asp-for="Username" class="form-control username" />
+
+            </div>
+            <div class="form-group">
+                <label asp-for="Password" class="control-label"></label>
+                <input asp-for="Password" class="form-control" />
+            </div>
+            <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
+            <div class="form-group registerButton">
+                <input type="submit" value="Kayıt ol" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+
+@section Scripts
+{
+
+    <script>
+        $(document).ready(function () {
+            $('.username').change(function () {
+                $.post("/Account/IsUserExist", { username: $('.username').val() })
+                    .done(function (result) {
+                        if (result) {
+                            $('.alert').removeClass('invisible');
+                            $('.registerButton').addClass('disabled');
+                        }
+                        else {
+                            $('.alert').addClass('invisible')
+                            $('.registerButton').removeClass('disabled');
+                        }
+                    })
+            })
+        })
+    </script>
+}
+

@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\asus\\source\\repos\\QuestionApp\\QuestionApp\\QuestionApp.csproj": {}
+    "C:\\Users\\asus\\source\\repos\\yeni\\QuestionApp\\QuestionApp.csproj": {}
   },
   "projects": {
-    "C:\\Users\\asus\\source\\repos\\QuestionApp\\QuestionApp\\QuestionApp.csproj": {
+    "C:\\Users\\asus\\source\\repos\\yeni\\QuestionApp\\QuestionApp.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\asus\\source\\repos\\QuestionApp\\QuestionApp\\QuestionApp.csproj",
+        "projectUniqueName": "C:\\Users\\asus\\source\\repos\\yeni\\QuestionApp\\QuestionApp.csproj",
         "projectName": "QuestionApp",
-        "projectPath": "C:\\Users\\asus\\source\\repos\\QuestionApp\\QuestionApp\\QuestionApp.csproj",
+        "projectPath": "C:\\Users\\asus\\source\\repos\\yeni\\QuestionApp\\QuestionApp.csproj",
         "packagesPath": "C:\\Users\\asus\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\asus\\source\\repos\\QuestionApp\\QuestionApp\\obj\\",
+        "outputPath": "C:\\Users\\asus\\source\\repos\\yeni\\QuestionApp\\obj\\",
         "projectStyle": "PackageReference",
         "fallbackFolders": [
           "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
